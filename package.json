@@ -4,11 +4,18 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts",
     "prepare": "tsc"
   },
   "files": [
     "dist"
+  ],
+  "keywords": [
+    "bash",
+    "string",
+    "substitution",
+    "variables",
+    "interpolation"
   ],
   "author": "Joe Flateau",
   "license": "ISC",
@@ -16,7 +23,10 @@
     "fs-extra": "^8.1.0"
   },
   "devDependencies": {
-    "tsc": "^1.20150623.0",
+    "@types/chai": "^4.2.9",
+    "@types/mocha": "^7.0.1",
+    "chai": "^4.2.0",
+    "mocha": "^7.1.0",
     "typescript": "^3.8.3"
   }
 }

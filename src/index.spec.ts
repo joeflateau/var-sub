@@ -38,7 +38,7 @@ describe("copyFromTemplateFiles", () => {
   it("should load file and replace var with no curly", async () => {
     await copyFromTemplateFiles(
       __dirname + "/../test",
-      "./**/*.txt",
+      "./**/*",
       __dirname + "/../test-results",
       { BAR: "bar" }
     );

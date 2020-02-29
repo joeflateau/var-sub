@@ -1,4 +1,4 @@
-import { readFile, mkdirp, writeFile } from "fs-extra";
+import { readFile, mkdirp, writeFile, lstat } from "fs-extra";
 import globCb from "glob";
 import { promisify } from "util";
 import { parse as parsePath, join as joinPath } from "path";
@@ -51,7 +51,9 @@ export async function copyFromTemplateFiles(
     const destPath = joinPath(destDir, srcRelativePath);
     const srcPath = joinPath(srcDir, srcRelativePath);
     await mkdirp(parsePath(destPath).dir);
-    await copyFromTemplateFile(srcPath, destPath, replacements);
+    if ((await lstat(srcPath)).isFile()) {
+      await copyFromTemplateFile(srcPath, destPath, replacements);
+    }
   }
 }
 

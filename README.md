@@ -2,15 +2,7 @@
 
 Bash style variable substitutions.
 
-```typescript
-await stringFromTemplateFile(__dirname + "/cloudfront.template.json", {
-  VIEWER_REQUEST_FUNCTION_ARN: viewerRequestFunctionArn,
-  ORIGIN_RESPONSE_FUNCTION_ARN: originResponseFunctionArn,
-  CALLER_REFERENCE: callerReference,
-  STAGE,
-  CNAME
-});
-```
+## String replacements
 
 ```typescript
 await stringFromTemplate(`foo $BAR`, {
@@ -30,5 +22,28 @@ await stringFromTemplate(
   {
     FOO: "bar"
   }
+);
+```
+
+## File replacements
+
+```typescript
+await stringFromTemplateFile(__dirname + "/cloudfront.template.json", {
+  VIEWER_REQUEST_FUNCTION_ARN: viewerRequestFunctionArn,
+  ORIGIN_RESPONSE_FUNCTION_ARN: originResponseFunctionArn,
+  CALLER_REFERENCE: callerReference,
+  STAGE,
+  CNAME
+});
+```
+
+## Recursive copy w/ replacements
+
+```typescript
+await copyFromTemplateFiles(
+  __dirname + "/../srcDir",
+  "./**/*.txt",
+  __dirname + "/../destDir",
+  { BAR: "bar" }
 );
 ```

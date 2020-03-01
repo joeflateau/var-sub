@@ -35,12 +35,23 @@ describe("stringFromTemplateFile", () => {
 });
 
 describe("copyFromTemplateFiles", () => {
-  it("should load file and replace var with no curly", async () => {
+  it("should clone tree and replace", async () => {
     await copyFromTemplateFiles(
       __dirname + "/../test",
       "./**/*",
       __dirname + "/../test-results",
       { BAR: "bar" }
+    );
+  });
+  it("should clone tree and replace with renames", async () => {
+    await copyFromTemplateFiles(
+      __dirname + "/../test",
+      "./**/*",
+      __dirname + "/../test-results",
+      { BAR: "bar" },
+      {
+        modifyDestRelativePath: path => path.split("--").join("")
+      }
     );
   });
 });

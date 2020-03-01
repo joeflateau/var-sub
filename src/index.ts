@@ -44,11 +44,19 @@ export async function copyFromTemplateFiles(
   srcDir: string,
   globPattern: string,
   destDir: string,
-  replacements: TemplateReplacements
+  replacements: TemplateReplacements,
+  {
+    modifyDestRelativePath
+  }: { modifyDestRelativePath?: (path: string) => string } = {}
 ): Promise<void> {
   const matches = await glob(globPattern, { cwd: srcDir });
   for (const srcRelativePath of matches) {
-    const destPath = joinPath(destDir, srcRelativePath);
+    const destPath = joinPath(
+      destDir,
+      modifyDestRelativePath
+        ? modifyDestRelativePath(srcRelativePath)
+        : srcRelativePath
+    );
     const srcPath = joinPath(srcDir, srcRelativePath);
     await mkdirp(parsePath(destPath).dir);
     if ((await lstat(srcPath)).isFile()) {

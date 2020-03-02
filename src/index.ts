@@ -45,24 +45,32 @@ export async function copyFromTemplateFiles(
   globPattern: string,
   destDir: string,
   replacements: TemplateReplacements,
-  {
-    modifyDestRelativePath
-  }: { modifyDestRelativePath?: (path: string) => string } = {}
+  { mapper }: { mapper?: (file: MapFile) => MapFile } = {}
 ): Promise<void> {
   const matches = await glob(globPattern, { cwd: srcDir });
   for (const srcRelativePath of matches) {
-    const destPath = joinPath(
-      destDir,
-      modifyDestRelativePath
-        ? modifyDestRelativePath(srcRelativePath)
-        : srcRelativePath
-    );
     const srcPath = joinPath(srcDir, srcRelativePath);
-    await mkdirp(parsePath(destPath).dir);
+
     if ((await lstat(srcPath)).isFile()) {
-      await copyFromTemplateFile(srcPath, destPath, replacements);
+      const { path: destRelativePath, contents } = (mapper ?? defaultMapper)({
+        path: srcRelativePath,
+        contents: await stringFromTemplateFile(srcPath, replacements)
+      });
+
+      const destPath = joinPath(destDir, destRelativePath);
+      await mkdirp(parsePath(destPath).dir);
+      await writeFile(destPath, contents, "utf8");
     }
   }
 }
 
+function defaultMapper(file: MapFile): MapFile {
+  return file;
+}
+
 export type TemplateReplacements = Record<string, string>;
+
+export interface MapFile {
+  path: string;
+  contents: string;
+}

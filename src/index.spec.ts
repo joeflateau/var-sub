@@ -50,7 +50,10 @@ describe("copyFromTemplateFiles", () => {
       __dirname + "/../test-results",
       { BAR: "bar" },
       {
-        modifyDestRelativePath: path => path.split("--").join("")
+        mapper: ({ path, contents }) => ({
+          path: path.split("--").join(""),
+          contents
+        })
       }
     );
   });
